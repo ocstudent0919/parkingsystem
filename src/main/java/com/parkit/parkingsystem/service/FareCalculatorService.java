@@ -2,6 +2,8 @@ package com.parkit.parkingsystem.service;
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.model.Ticket;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class FareCalculatorService {
 
@@ -10,11 +12,9 @@ public class FareCalculatorService {
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
         }
 
-        int inHour = ticket.getInTime().getHours();
-        int outHour = ticket.getOutTime().getHours();
-
-        //TODO: Some tests are failing here. Need to check if this logic is correct
-        int duration = outHour - inHour;
+        long inTime = ticket.getInTime().getTime();
+        long outTime = ticket.getOutTime().getTime();
+        double duration = getDuration(inTime, outTime);
 
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
@@ -27,5 +27,17 @@ public class FareCalculatorService {
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");
         }
+    }
+
+    private double getDuration(long inTime, long outTime){
+        //Convert duration in milliseconds to duration in hours (decimal value)
+        double durationInHours = (double)(outTime - inTime) / (60 * 60 * 1000);
+        return roundValue(durationInHours);
+    }
+
+    private double roundValue(Double valueToRound){
+        //Round a Double to 2 decimal places using BigDecimal
+        BigDecimal bd = new BigDecimal(valueToRound.toString()).setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }
