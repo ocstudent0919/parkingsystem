@@ -3,8 +3,12 @@ package com.parkit.parkingsystem;
 import com.parkit.parkingsystem.service.InteractiveShell;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import java.nio.file.Paths;
 
 public class App {
+    static {
+        System.setProperty("log4j.configurationFile", Paths.get(ClassLoader.getSystemResource("log4j.properties").toString()).toString());
+    }
     private static final Logger logger = LogManager.getLogger("App");
     public static void main(String args[]){
         logger.info("Initializing Parking System");

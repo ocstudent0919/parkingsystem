@@ -10,13 +10,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import java.nio.file.Paths;
 import java.util.Date;
 
 public class FareCalculatorServiceTest {
 
     private static FareCalculatorService fareCalculatorService;
     private Ticket ticket;
+
+    @BeforeAll
+    static void setUpLoggerProperties (){
+        System.setProperty("log4j.configurationFile", Paths.get(ClassLoader.getSystemResource("log4j.properties").toString()).toString());
+    }
 
     @BeforeAll
     private static void setUp() {
