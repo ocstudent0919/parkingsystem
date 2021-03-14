@@ -1,6 +1,7 @@
 package com.parkit.parkingsystem.service;
 
 import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.constants.Promo;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
@@ -100,6 +101,10 @@ public class ParkingService {
         try{
             String vehicleRegNumber = getVehichleRegNumber();
             Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
+            boolean isEligible = ticketDAO.checkDiscountEligibility(vehicleRegNumber); // checks eligibility for discounted ticket
+            if(isEligible){
+                System.out.println("As our loyal client you are granted a discount of " + (int)(Promo.REDUCTION_RATE * 100) + "%");
+                ticket.setPromo(true);} // approves eligibility for a discount
             Date outTime = new DateTime().toDate();
             ticket.setOutTime(outTime);
             fareCalculatorService.calculateFare(ticket);

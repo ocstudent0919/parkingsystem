@@ -10,20 +10,22 @@ public class FareCalculatorService {
 
     public void calculateFare(Ticket ticket){
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){
+            assert ticket.getOutTime() != null;
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
         }
 
         long inTime = ticket.getInTime().getTime();
         long outTime = ticket.getOutTime().getTime();
         double duration = getDuration(inTime, outTime);
+        boolean condition = ticket.isPromo();
 
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
-                ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
+                ticket.setPrice(calculateFinalPrice(condition,duration * Fare.CAR_RATE_PER_HOUR));
                 break;
             }
             case BIKE: {
-                ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR);
+                ticket.setPrice(calculateFinalPrice(condition,duration * Fare.BIKE_RATE_PER_HOUR));
                 break;
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");
@@ -44,5 +46,12 @@ public class FareCalculatorService {
         //Round a Double to 2 decimal places using BigDecimal
         BigDecimal bd = new BigDecimal(valueToRound.toString()).setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+
+    private double calculateFinalPrice (boolean isPromo, double basePrice){
+        // applies a discount to the ticket price if criteria are satisfied
+        if(isPromo)
+            return basePrice * (1 - Promo.REDUCTION_RATE);
+        return basePrice;
     }
 }
