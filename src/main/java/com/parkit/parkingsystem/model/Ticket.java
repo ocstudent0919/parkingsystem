@@ -1,6 +1,5 @@
 package com.parkit.parkingsystem.model;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class Ticket {
@@ -10,6 +9,11 @@ public class Ticket {
     private double price;
     private Date inTime;
     private Date outTime;
+    private boolean isPromo; // discount rate eligibility
+
+    public Ticket() {
+        this.isPromo = false;
+    }
 
     public int getId() {
         return id;
@@ -57,5 +61,13 @@ public class Ticket {
 
     public void setOutTime(Date outTime) {
         this.outTime = outTime;
+    }
+
+    public boolean isPromo() {
+        return isPromo;
+    }
+
+    public void setPromo(boolean promo) {
+        isPromo = promo;
     }
 }
