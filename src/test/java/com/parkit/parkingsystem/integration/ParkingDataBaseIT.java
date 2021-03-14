@@ -1,8 +1,6 @@
 package com.parkit.parkingsystem.integration;
 
 import com.parkit.parkingsystem.constants.Fare;
-import com.parkit.parkingsystem.constants.ParkingType;
-import com.parkit.parkingsystem.constants.Promo;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
@@ -18,8 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 
@@ -66,8 +63,10 @@ public class ParkingDataBaseIT {
         parkingService.processIncomingVehicle();
 
         //THEN
+        //Check that the ticket is saved in the database
         assertNotNull(ticketDAO.getTicket("ABCDEF"), "Ticket was not saved");
-        assertEquals(2, parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR), "Availability in parking table was not updated" );
+        //Check that the parking table is updated with availability (= false)
+        assertFalse(parkingSpotDAO.checkParkingAvailability(1), "Availability in the parking table was not updated");
     }
 
     @Test
@@ -81,8 +80,9 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
 
         //THEN
+        //Check that the generated fare is populated correctly in the database
         assertEquals(Fare.CAR_RATE_PER_HOUR, ticketDAO.getTicket("ABCDEF").getPrice());
+        //Check that the out time is populated correctly in the database
         assertNotNull(ticketDAO.getTicket("ABCDEF").getOutTime(), "Out time was not set correctly");
     }
-
 }

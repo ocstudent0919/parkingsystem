@@ -25,7 +25,7 @@ public class ParkingSpotDAO {
             ps.setString(1, parkingType.toString());
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                result = rs.getInt(1);;
+                result = rs.getInt(1);
             }
             dataBaseConfig.closeResultSet(rs);
             dataBaseConfig.closePreparedStatement(ps);
@@ -54,6 +54,22 @@ public class ParkingSpotDAO {
         }finally {
             dataBaseConfig.closeConnection(con);
         }
+    }
+
+    public boolean checkParkingAvailability (int parkingNumber) {
+        boolean available = true;
+        try(Connection con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.IF_PARKING_SPOT_AVAILABLE)) {
+            ps.setString(1, String.valueOf(parkingNumber));
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                available = rs.getBoolean(1);
+            }
+            dataBaseConfig.closeResultSet(rs);
+        }catch (Exception ex){
+            logger.error("Error checking parking availability",ex);
+        }
+        return available;
     }
 
 }
