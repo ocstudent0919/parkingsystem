@@ -2,7 +2,7 @@ package com.parkit.parkingsystem.model;
 
 import java.util.Date;
 
-public class Ticket {
+public final class Ticket {
     private int id;
     private ParkingSpot parkingSpot;
     private String vehicleRegNumber;
@@ -27,7 +27,7 @@ public class Ticket {
         return parkingSpot;
     }
 
-    public void setParkingSpot(ParkingSpot parkingSpot) {
+    public void setParkingSpot(final ParkingSpot parkingSpot) {
         this.parkingSpot = parkingSpot;
     }
 
@@ -35,7 +35,7 @@ public class Ticket {
         return vehicleRegNumber;
     }
 
-    public void setVehicleRegNumber(String vehicleRegNumber) {
+    public void setVehicleRegNumber(final String vehicleRegNumber) {
         this.vehicleRegNumber = vehicleRegNumber;
     }
 
@@ -48,19 +48,19 @@ public class Ticket {
     }
 
     public Date getInTime() {
-        return inTime;
+        return inTime == null ? null : new Date(inTime.getTime());
     }
 
-    public void setInTime(Date inTime) {
-        this.inTime = inTime;
+    public void setInTime(final Date inTime) {
+        this.inTime = inTime == null ? null : new Date(inTime.getTime());
     }
 
     public Date getOutTime() {
-        return outTime;
+        return outTime == null ? null : new Date(outTime.getTime());
     }
 
-    public void setOutTime(Date outTime) {
-        this.outTime = outTime;
+    public void setOutTime(final Date outTime) {
+        this.outTime = outTime == null ? null : new Date(outTime.getTime());
     }
 
     public boolean isPromo() {
